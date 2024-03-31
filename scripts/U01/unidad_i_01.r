@@ -8,9 +8,14 @@
 # Los espacios en blanco **NO** se tienen en cuenta en el código:
 
 Objeto_01<-"Hola Mundo 1"
-Objeto_02 <- "Hola Mundo 2" # esta es la forma recomendada (un espacio en blanco ' ' entre el nombre del objeto 'Objeto_02', la flecha de asignación '<-' y el contenido del objeto "Hola Mundo 2")
+
+Objeto_02 <- "Hola Mundo 2" # esta es la forma recomendada (un espacio en blanco ' ' 
+                            # entre el nombre del objeto 'Objeto_02', la flecha de 
+                            # asignación '<-' y el contenido del objeto "Hola Mundo 2")
 Objeto_03  <-  "Hola Mundo 3"
+
 Objeto_04   =   "Hola Mundo 4"
+
 Objeto_05    <-   
   "Hola Mundo 5"
 
@@ -104,7 +109,7 @@ getwd()
 # ¿Qué otros directorios tengo disponibles?
 list.dirs()
 
-# ¿Qué archivos tengo disponibles en el directorio 'sample_data'?
+# ¿Qué archivos tengo disponibles en el directorio 'scripts'?
 list.files('scripts')
 
 # ¿Cuál es la función para sumar?
