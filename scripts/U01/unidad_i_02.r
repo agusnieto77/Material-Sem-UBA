@@ -132,8 +132,7 @@ tablafemicidios
 
 # Tablas con knitr
 
-# Tuneamos la tabla con formattable, knitr y kableExtra
-
+# Mejoramos la estética de la tabla con formattable, knitr y kableExtra
 
 # Instalamos y cargamos formattable, knitr y kableExtra
 
@@ -360,4 +359,3 @@ print("Tabla Unificada")
     Tabla_Ocu2, 
     Tabla_Ocu1, 
     by = "Condicion"))
-
