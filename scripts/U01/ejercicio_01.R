@@ -10,13 +10,13 @@ require(tm)         # Para procesamiento de texto
 
 # Creamos la función para raspar Clarín cuyo nombre será 'scraping_Cla()' ------------------------
 
-scraping_Cla <- function (x){          # abro función para raspado web y le asigno un nombre: scraping_Cla
+scraping_Cla <- function (x){         # abro función para raspado web y le asigno un nombre: scraping_Cla
   
   read_html(x) %>%                    # llamo a la función read_html() para obtener el contenido de la página
     
     html_elements("h2.title") %>%     # llamo a la función html_elements() y especifico las etiquetas de los títulos 
     
-    html_text2() %>%                   # llamo a la función html_text2() para especificar el formato 'chr' del título.
+    html_text2() %>%                  # llamo a la función html_text2() para especificar el formato 'chr' del título.
     
     as_tibble() %>%                   # llamo a la función as_tibble() para transforma el vector en tabla 
     
@@ -39,7 +39,7 @@ for (url in urls) {
 
 # Tokenizamos los títulos de la sección 'Política' del periódico Clarín ---------------------------
 
-Clarin %>%                                          # datos en formato tabular extraídos con la función scraping_Cla()
+Clarin %>%                                            # datos en formato tabular extraídos con la función scraping_Cla()
   
   unnest_tokens(                                      # función para tokenizar
     
@@ -61,7 +61,7 @@ Clarin %>%                                          # datos en formato tabular e
   
   filter(!palabra %in% 
            
-           stopwords("es")) %>%                # filtramos palabras comunes
+           stopwords("es")) %>%                       # filtramos palabras comunes
   
   filter(palabra != "ex") %>%                         # filtro comodín
   
