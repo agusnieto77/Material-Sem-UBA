@@ -57,7 +57,7 @@ Clarin %>%                                          # datos en formato tabular e
       
       n)) %>%                                         # columna de frecuencia a ordenar en forma decreciente
   
-  filter(n > 5) %>%                                   # filtramos y nos quedamos con las frecuencias mayores a 2
+  filter(n > 6) %>%                                   # filtramos y nos quedamos con las frecuencias mayores a 2
   
   filter(!palabra %in% 
            
