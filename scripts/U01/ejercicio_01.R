@@ -163,4 +163,4 @@ Clarin %>%                                          # datos en formato tabular e
 
 # Pueden copiar y pegar o descargarlo desde RStudio con esta línea de comando:
 
-download.file("https://estudiosmaritimossociales.org/ejercicio01.R", "ejercicio01.R")
+download.file("https://github.com/agusnieto77/Material-Sem-UBA/raw/master/scripts/U01/ejercicio_01.R", "ejercicio_01.R")
