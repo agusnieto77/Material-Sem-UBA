@@ -33,7 +33,7 @@ dir.create("scripts/U03/BORA")
 
 # BAJAR LOS ARCHIVOS QUE NECESITAMOS PARA LA INVESTIGACION
 (                                 # abrimos la impresión en consola del objeto que vamos a crear
-  tabla_periodicos <-             # asignamos un nombre al objeto que vamos a crear
+  tabla_archivos <-             # asignamos un nombre al objeto que vamos a crear
     tibble(                       # abrimos la tabla
       ia_search(                  # abrimos la función de búsqueda
         terms = parametros,       # ingresamos el objeto con los parámetros

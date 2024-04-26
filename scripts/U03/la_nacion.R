@@ -11,9 +11,6 @@ url <- 'https://www.lanacion.com.ar/politica/'
 
 # Creamos un set de objetos vacíos
 
-# Links
-links <- c()
-
 # Variables
 fechas    <- c()
 titulares <- c()
@@ -30,9 +27,10 @@ links <- read_html(url) |>
 
 # Corremos el for para extraer el contenido de los primeros 32 links escrapeados con el for anterior
 for(link in links){
-  fechas    <- append(fechas,    read_html(link) |> html_elements('.com-date.--twoxs') |> html_text2())
-  titulares <- append(titulares, read_html(link) |> html_elements('h1.com-title') |> html_text2())
-  notas     <- append(notas,     read_html(link) |> html_elements('.com-paragraph') |> html_text2() |> paste(collapse = "\n\n"))
+  html <- read_html(link)
+  fechas    <- append(fechas,    html |> html_elements('.com-date.--twoxs') |> html_text2())
+  titulares <- append(titulares, html |> html_elements('h1.com-title') |> html_text2())
+  notas     <- append(notas,     html |> html_elements('.com-paragraph') |> html_text2() |> paste(collapse = "\n\n"))
   hipers    <- append(hipers, link)
 }
 

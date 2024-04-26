@@ -22,12 +22,12 @@ for (i in id_sec) {urls <- append(urls, paste0(i, fechas, "/", fechas, ".pdf"))}
 dir.create("bora")
 
 # Descargar 10 archivos PDF aleatorios
-for (url in sample(urls, 10)) {download.file(url, destfile = paste0("BORA/", basename(url)), mode = "wb")}
+for (url in sample(urls, 10)) {download.file(url, destfile = paste0("bora/", basename(url)), mode = "wb")}
 
 # Descargar 10 archivos PDF aleatorios con manejo de errores
 for (url in sample(urls, 10)) {
   tryCatch({
-    download.file(url, destfile = paste0("BORA/", basename(url)), mode = "wb")
+    download.file(url, destfile = paste0("bora/", basename(url)), mode = "wb")
   }, error = function(e) {
     cat("Error al descargar:", url, "\n")
     cat("Mensaje de error:", conditionMessage(e), "\n")
