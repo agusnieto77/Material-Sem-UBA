@@ -35,8 +35,7 @@ for (i in seq_along(textos)) {
   message(paste("Procesando ID:", i))
   while (!condicion_cumplida) {
     salida <- tryCatch(fromJSON(toJSON(acep_gpt(texto = textos[i], 
-                                                instrucciones = instrucciones_01_en,
-                                                gpt_api = ""))), 
+                                                instrucciones = instrucciones_01_en))), 
                        error = function(e) NULL)
     
     if (length(lapply(salida, fromJSON, simplifyDataFrame = TRUE)[[1]]) == 13) {
@@ -46,8 +45,7 @@ for (i in seq_along(textos)) {
     } else {
       
       salida <- tryCatch(fromJSON(toJSON(acep_gpt(texto = textos[i], 
-                                                  instrucciones = instrucciones_01_en,
-                                                  gpt_api = ""))), 
+                                                  instrucciones = instrucciones_01_en))), 
                          error = function(e) NULL)
     }
   }
