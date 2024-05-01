@@ -44,12 +44,9 @@ for (i in 1:200) {
 
 # Código para cerrar servidor ----------------------------------------
 
-cliente$close()
-servidor$server$stop()
+twitter$session$close()
 
 
 # Guardar los datos -------------------------------------------------------
 
 saveRDS(tweets_r, "./scripts/U02/dengue/data/tweets_r.rds")
-  
-twitter$session$close()
