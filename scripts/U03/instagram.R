@@ -45,9 +45,31 @@ obtener_texto <- function(selector) {
   }
 }
 
+# Función para obtener la fecha del post
+obtener_video <- function(selector1, selector2, selector3) {
+  if (length(post_instagram$html_elements(xpath = selector1)) > 0) {
+    html_attr(post_instagram$html_elements(xpath = selector1), "content")
+  } else if (length(post_instagram$html_elements(selector2)) > 0) {
+    na.omit(
+      gsub("\\\\|amp;", "", 
+           gsub("BaseURL>|u003C.*$", "", 
+                stringr::str_extract(
+                  as.character(
+                    post_instagram$html_elements(
+                      css = selector2)), 
+                  "BaseURL>.*.SegmentBase"))))[1]
+  } else if (length(post_instagram$html_elements(selector3)) > 0) {
+    html_attr(post_instagram$html_elements(selector3), "src")
+  } else {
+    NA  # Retorna NA si no se encuentra ninguno de los selectores
+  }
+}
+
 post_ar_mza <- tibble()
 
 imagen <- "img.x5yr21d.xu96u03.x10l6tqk.x13vifvy.x87ps6o.xh8yej3"
+video <- '//meta[@property="og:video:secure_url"]'
+video2 <- "body > script"
 fecha1 <-  "time.xsgj6o6"
 fecha2 <-  "time.x1p4m5qa"
 texto <-  "span.x193iq5w.xeuugli.x1fj9vlw.x13faqbe.x1vvkbs.xt0psk2.x1i0vuye.xvs91rp.xo1l8bm.x5n08af.x10wh9bi.x1wdrske.x8viiok.x18hxmgj"
@@ -64,7 +86,8 @@ for (i in urls_post) {
       fecha_post = obtener_fecha(fecha1, fecha2),
       texto_post = obtener_texto(texto),
       likes_post = html_text(post_instagram$html_elements(css = likes)),
-      link_image = html_attr(post_instagram$html_elements(css = imagen), "src")[1],
+      link_video = obtener_video(video, video2, imagen)[1],# html_attr(post_instagram$html_elements(css = imagen), "src")[1]
+      link_imagen = html_attr(post_instagram$html_elements(css = imagen), "src")[1],
       comentario = html_text(post_instagram$html_elements(css = coment))[2],
       url_post = i
     )
