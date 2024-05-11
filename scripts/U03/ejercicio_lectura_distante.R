@@ -30,7 +30,7 @@ post_al_mza <- post_al_mza %>%
          año_mes = floor_date(fecha_norm, unit = "months"))  # Extrae el año y mes de la fecha normalizada
 
 # Conteo de frecuencia de post por año y mes
-post_al_mza %>% count(año_mes) %>% 
+post_al_mza %>% count(año_mes) %>%
   filter(!is.na(año_mes)) %>% 
   ggplot() + 
   geom_line(aes(x=año_mes, y=n), size = 0.6) +  # Grafica la frecuencia de post por año y mes
@@ -68,9 +68,9 @@ textos_tokens %>% group_by(año) %>%
 # Visualización de nubes de palabras
 nubes
 
-# Análisis de frecuencia de bigramas
-textstat_frequency(dfm(tokens_ngrams(tokens(acep_cleaning(texto_limpio$texto)), n = 2))) %>% 
-  head(20) %>% 
+# Calcular la frecuencia de bigramas y visualizarlos en un gráfico de barras
+textstat_frequency(dfm(tokens_ngrams(tokens(acep_cleaning(texto_limpio$texto)), n = 2))) %>%
+  head(20) %>%
   ggplot() +
   geom_bar(aes(x=reorder(feature, frequency), y=frequency), fill = "white",
            color = "grey30", stat = "identity", show.legend = F) +
@@ -79,9 +79,115 @@ textstat_frequency(dfm(tokens_ngrams(tokens(acep_cleaning(texto_limpio$texto)), 
   theme_classic() +
   theme(text = element_text(size = 14))
 
-# Continuación del análisis de bigramas, limpieza de texto con ACEP
-# Tokenización, análisis de frecuencia y visualización de términos
-# Análisis de emojis
+# Convertir la matriz dfm a una matriz de término-documento
+matriz_term_doc <- as.matrix(dfm(tokens_ngrams(tokens(acep_cleaning(texto_limpio$texto)), n = 2)))
+
+# Calcular las frecuencias de bigramas
+frecuencias_bigrams <- colSums(matriz_term_doc)
+
+# Crear un data frame con las frecuencias de bigramas
+tabla_frecuencias_bigrams <- data.frame(Bigram = names(frecuencias_bigrams), Frecuencia = frecuencias_bigrams)
+
+# Ordenar la tabla de frecuencias por frecuencia descendente
+tabla_frecuencias_bigrams <- tabla_frecuencias_bigrams[order(-tabla_frecuencias_bigrams$Frecuencia), ]
+
+# Seleccionar las 15 primeras filas de la tabla de frecuencias de bigramas
+ley_IVE <- select(tabla_frecuencias_bigrams, Frecuencia)
+
+# Imprimir las primeras 15 filas de la tabla de frecuencias de bigramas
+head(ley_IVE, n = 15)
+
+# Crear una matriz de documentos-términos con tokenización
+dfmat_ig <- dfm(tokens(gsub("#"," #",texto_limpio$texto), remove_punct = TRUE))
+head(dfmat_ig)  # Mostrar las primeras filas de la matriz
+class(dfmat_ig) # Mostrar la clase de la matriz
+
+# Seleccionar términos que comienzan con # (#hashtags)
+dfmat_tag <- dfm_select(dfmat_ig, pattern = "#*")
+toptag <- names(topfeatures(dfmat_tag, 50)) # Obtener los 50 principales #hashtags
+head(toptag) # Mostrar los primeros #hashtags seleccionados
+
+# Crear una matriz de co-ocurrencia de #hashtags
+fcmat_tag <- fcm(dfmat_tag)
+head(fcmat_tag) # Mostrar las primeras filas de la matriz de co-ocurrencia
+
+# Seleccionar subconjunto de #hashtags más frecuentes
+fcmat_topgat <- fcm_select(fcmat_tag, pattern = toptag)
+
+# Visualizar la red de co-ocurrencia de #hashtags más frecuentes
+textplot_network(fcmat_topgat, min_freq = 0.1, edge_alpha = 0.1, edge_size = 4,
+                 edge_color = "purple",
+                 vertex_labelsize = log10((Matrix::rowSums(fcmat_topgat)*12)+5),
+                 vertex_color = "purple",
+                 vertex_labelfont = if (Sys.info()["sysname"] == "Raleway Medium") "Raleway Medium" else NULL,
+                 vertex_size = 1,
+                 vertex_labelcolor = "grey10")
+
+# Seleccionar términos que comienzan con @ (usuarixs)
+dfmtat_users <- dfm_select(dfmat_ig, pattern = "@*")
+topuser <- names(topfeatures(dfmtat_users, 50)) # Obtener lxs 50 principales usuarixs
+head(topuser) # Mostrar lxs primerxs usuarixs seleccionadxs
+
+# Crear una matriz de co-ocurrencia de usuarixs
+fcmat_users <- fcm(dfmtat_users)
+head(fcmat_users) # Mostrar las primeras filas de la matriz de co-ocurrencia
+
+# Seleccionar subconjunto de usuarixs más frecuentes
+fcmat_users <- fcm_select(fcmat_users, pattern = topuser)
+
+# Visualizar la red de co-ocurrencia de usuarixs más frecuentes
+textplot_network(fcmat_users, min_freq = 0.1, edge_alpha = 0.1, edge_size = 4,
+                 edge_color = "purple",
+                 vertex_labelsize = log10((Matrix::rowSums(fcmat_topgat)*12)+5),
+                 vertex_color = "purple",
+                 vertex_labelfont = if (Sys.info()["sysname"] == "Raleway Medium") "Raleway Medium" else NULL,
+                 vertex_size = 1,
+                 vertex_labelcolor = "grey10")
+
+# Limpieza de texto con ACEP
+ig_limpios <- acep_cleaning(texto_limpio$texto, other_sw = c("si", "hoy", "van", "día", "hs", "años"))
+
+# Tokenización del texto limpio
+(tokens <- acep_token(ig_limpios))
+
+# Análisis de frecuencia de términos
+(tabla <- acep_token_table(tokens$tokens, u = 15))
+
+# Visualización del análisis de frecuencia
+acep_token_plot(tokens$tokens, u = 15)
+
+# Búsqueda de emojis en los mensajes de texto
+post_al_mza_emojis <- lookup_emoji(post_al_mza, text_field = "texto_post")
+
+# Preparación de datos para visualización de emojis más utilizados
+plotEmojis <- post_al_mza_emojis %>% 
+  unnest(emoji, emoji_name) %>% 
+  mutate( emoji = str_sub(emoji, end = 1)) %>% 
+  mutate( emoji_name = str_remove(emoji_name, ":.*")) %>% 
+  count(emoji, emoji_name) %>%
+  top_n(20, n) %>% 
+  arrange(desc(n)) %>%
+  mutate(
+    emoji_url = 
+      map_chr(emoji, 
+              ~paste0("https://abs.twimg.com/emoji/v2/72x72/", 
+                      as.hexmode(utf8ToInt(.x)),".png")) 
+  )
+
+# Visualización de emojis más utilizados
+plotEmojis %>% 
+  ggplot(aes(x=reorder(emoji_name, n), y=n)) +
+  geom_col(aes(fill=n), show.legend = FALSE, width = .2) +
+  geom_point(aes(color=n), show.legend = FALSE, size = .5) +
+  geom_image(aes(image=emoji_url), size=.04) +
+  scale_fill_gradient(low="#2b83ba",high="#d7191c") +
+  scale_color_gradient(low="#2b83ba",high="#d7191c") +
+  ylab("Número de veces que el emoji fue usado") +
+  xlab("Emoji y significado") +
+  ggtitle("Emojis más utilizados") +
+  coord_flip() +
+  theme_minimal()
+
 # FUENTES
 # https://rpubs.com/mgsaavedraro/911783
 # https://quanteda.io/articles/pkgdown/examples/twitter.html
