@@ -29,11 +29,9 @@ base <- readRDS("base.rds")
 
 base <- base %>% filter(fecha >= '2001-01-20' & fecha <= '2001-01-28')
 
-texto_prueba <- paste0("ID: ", base$id_evento, 
-                       sep = " | ", 
-                       base$fecha, 
-                       sep = " | ",
-                       "Texto: ", base$texto)
+texto_prueba <- paste0("ID: ", base$id_evento, " | ", 
+                       "FECHA: ", base$fecha,  " | ",
+                       "TEXTO: ", base$texto)
 
 cat(texto_prueba)
 str(texto_prueba)
