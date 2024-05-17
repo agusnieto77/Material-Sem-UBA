@@ -17,7 +17,7 @@ Por eventos de conflicto deben entenderse aquellas acciones en el que un grupo r
 Excluir las acciones realizadas por autoridades estatales (gobierno, parlamento, poder judicial). 
 Estos resultados deberan informarse en datos en formato JSON en donde cada elemento representa
 una accion de conflicto. No asignar ningun elemento JSON en caso que el evento sea no conflictivo.
-Cada JSON debe contenerse los siguientes claves:
+Cada JSON debe contener las siguientes claves:
 ID: ID del evento en la base de datos.
 Fecha: Fecha del evento.
 Descripcion: un resumen de la variable Texto.'
